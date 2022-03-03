@@ -55,15 +55,18 @@ function addToCart() {
 	const idItem = getIdFromUrl();
 	const colorItem = document.getElementById("colors").value;
 	const quantityItem = parseInt(document.getElementById("quantity").value);
+	if (!checkOrderValidity(colorItem, quantityItem)) {
+		return 0;
+	}
 	if (checkOrder(idItem, colorItem)) {
 		const order = [idItem, colorItem, quantityItem];
-		localStorage.setItem(idItem, JSON.stringify(order));
+		localStorage.setItem(idItem + colorItem, JSON.stringify(order));
 		console.log("add New");
 	} else {
-		const storage = localStorage.getItem(idItem);
+		const storage = localStorage.getItem(idItem + colorItem);
 		const objectStorage = JSON.parse(storage);
 		const order = [idItem, colorItem, quantityItem + objectStorage[2]];
-		localStorage.setItem(idItem, JSON.stringify(order));
+		localStorage.setItem(idItem + colorItem, JSON.stringify(order));
 		console.log("add Again");
 	}
 }
@@ -79,4 +82,19 @@ function checkOrder(idItem, colorItem) {
 		}
 	}
 	return true;
+}
+
+function checkOrderValidity(colorItem, quantityItem) {
+	if (colorItem == "" && quantityItem == "0") {
+		alert("Veuillez choisir une couleur et une quantité valide");
+		return 0;
+	} else if (colorItem == "") {
+		alert("Veuillez choisir une couleur valide");
+		return 0;
+	} else if (quantityItem == "0") {
+		alert("Veuillez choisir une quantité valide");
+		return 0;
+	} else {
+		return 1;
+	}
 }

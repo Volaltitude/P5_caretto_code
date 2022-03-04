@@ -1,5 +1,4 @@
 const idItems = document.getElementById("items");
-console.log(idItems);
 const apiUrl = "http://localhost:3000/api/products";
 
 async function getListItems() {

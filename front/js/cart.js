@@ -86,12 +86,11 @@ async function printCart() {
 				deleteItem.textContent = "Supprimer";
 			}
 		}
+		return 1;
 	} catch (err) {
 		console.error(err);
 	}
 }
-
-printCart();
 
 async function printTotal() {
 	try {
@@ -114,3 +113,99 @@ async function printTotal() {
 	}
 }
 printTotal();
+
+async function deleteItem() {
+	try {
+		if (await printCart()) {
+			let deleteButton = document.getElementsByClassName("deleteItem");
+			for (let i = 0; i < deleteButton.length; i++) {
+				deleteButton[i].addEventListener("click", () => {
+					let id = Object.keys(localStorage)[i];
+					localStorage.removeItem(id);
+					location.reload();
+				});
+			}
+		}
+	} catch (err) {
+		console.error(err);
+	}
+}
+deleteItem();
+
+setTimeout(function changeInput() {
+	let input = document.getElementsByClassName("itemQuantity");
+	for (let i = 0; i < input.length; i++) {
+		input[i].addEventListener("change", (e) => {
+			let id = Object.keys(localStorage)[i];
+			let newValue = JSON.parse(Object.values(localStorage)[i]);
+			newValue.pop();
+			newValue.push(parseInt(e.target.value));
+			localStorage.setItem(id, JSON.stringify(newValue));
+			printTotal();
+		});
+	}
+}, 2000);
+
+const regexName =
+	/^[A-ZÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ]{1}([ '-]?[A-ZÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ]?[a-záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ]+)+$/;
+const regexMail =
+	/(?:[a-z0-9!\#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!\#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
+const regexAddress =
+	/^[0-9]{1,5}([ '-]?[A-ZÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ]?[a-záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ]+)+$/;
+
+
+let firstName = document.getElementById("firstName");
+let lastName = document.getElementById("lastName");
+let address = document.getElementById("address");
+let city = document.getElementById("city");
+let email = document.getElementById("email");
+firstName.addEventListener("change", (e) => {
+	let firstNameError = document.getElementById("firstNameErrorMsg");
+	if (e.target.value.match(regexName)) {
+		firstNameError.textContent = ""
+	}
+	else {
+		firstNameError.textContent = "Veuillez corriger ce champs du formulaire";
+	}
+
+});
+lastName.addEventListener("change", (e) => {
+	let lastNameError = document.getElementById("lastNameErrorMsg");
+	if (e.target.value.match(regexName)) {
+		lastNameError.textContent = ""
+	}
+	else {
+		lastNameError.textContent = "Veuillez corriger ce champs du formulaire";
+	}
+
+});
+address.addEventListener("change", (e) => {
+	let addressError = document.getElementById("addressErrorMsg");
+	if (e.target.value.match(regexAddress)) {
+		addressError.textContent = ""
+	}
+	else {
+		addressError.textContent = "Veuillez corriger ce champs du formulaire";
+	}
+
+});
+city.addEventListener("change", (e) => {
+	let cityError = document.getElementById("cityErrorMsg");
+	if (e.target.value.match(regexName)) {
+		cityError.textContent = ""
+	}
+	else {
+		cityError.textContent = "Veuillez corriger ce champs du formulaire";
+	}
+
+});
+email.addEventListener("change", (e) => {
+	let emailError = document.getElementById("emailErrorMsg");
+	if (e.target.value.match(regexName)) {
+		emailError.textContent = ""
+	}
+	else {
+		emailError.textContent = "Veuillez corriger ce champs du formulaire";
+	}
+
+});

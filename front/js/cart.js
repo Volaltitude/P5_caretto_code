@@ -148,8 +148,8 @@ setTimeout(function changeInput() {
 
 const regexName =
 	/^[A-ZÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ]{1}([ '-]?[A-ZÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ]?[a-záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ]+)+$/;
-const regexMail =
-	/(?:[a-z0-9!\#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!\#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
+const regexEmail =
+	/^[a-z0-9,!#$%&'*+=?\/^_`{|}~-]+(\.[a-z0-9,!#$%&'*+=?^_`\/{|}~-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*\.[a-z]{2,}$/;
 const regexAddress =
 	/^[0-9]{1,5}([ '-]?[A-ZÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ]?[a-záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ]+)+$/;
 
@@ -163,7 +163,7 @@ firstName.addEventListener("change", (e) => {
 	let firstNameError = document.getElementById("firstNameErrorMsg");
 	if (e.target.value.match(regexName)) {
 		firstNameError.textContent = ""
-	}
+	} 
 	else {
 		firstNameError.textContent = "Veuillez corriger ce champs du formulaire";
 	}
@@ -201,7 +201,7 @@ city.addEventListener("change", (e) => {
 });
 email.addEventListener("change", (e) => {
 	let emailError = document.getElementById("emailErrorMsg");
-	if (e.target.value.match(regexName)) {
+	if (e.target.value.match(regexEmail)) {
 		emailError.textContent = ""
 	}
 	else {
@@ -209,3 +209,54 @@ email.addEventListener("change", (e) => {
 	}
 
 });
+
+function formIsValid () {
+	let emailValue = document.getElementById("email").value;
+	let cityValue = document.getElementById("city").value;
+	let addressValue = document.getElementById("address").value;
+	let firstNameValue = document.getElementById("firstName").value;
+	let lastNameValue = document.getElementById("lastName").value;
+	if (emailValue.match(regexEmail) && cityValue.match(regexName) && addressValue.match(regexAddress) && firstNameValue.match(regexName) && lastNameValue.match(regexName)) {
+		return 1;
+	}
+}
+
+function getAllOrderId () {
+	let allOrderId =[];
+	for (let item in localStorage) {
+		let cartItem = JSON.parse(localStorage.getItem(item));
+		if (cartItem != null) {
+			allOrderId.push(cartItem[0]);
+		}
+	}
+	return allOrderId;
+}
+
+const submitButton = document.getElementById("order");
+submitButton.addEventListener("click", async (e) => {
+	e.preventDefault();
+	if (formIsValid()) {
+		const order = {
+			contact: {
+				firstName: document.getElementById("firstName").value,
+				lastName: document.getElementById("lastName").value,
+				address: document.getElementById("address").value,
+				city: document.getElementById("city").value,
+				email: document.getElementById("email").value
+		},
+			products: getAllOrderId()
+	};
+	let orderRes = await fetch("http://localhost:3000/api/products/order", {
+		method: "POST",
+		body: JSON.stringify(order),
+		headers: {
+			'Accept': 'application/json',
+      		'Content-Type': 'application/json'
+		}
+	})
+	orderRes =  await orderRes.json();
+	localStorage.clear();
+	document.location.href = `confirmation.html?id=${orderRes.orderId}`
+}});
+
+

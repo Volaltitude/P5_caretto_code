@@ -153,7 +153,6 @@ const regexEmail =
 const regexAddress =
 	/^[0-9]{1,5}([ '-]?[A-ZÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ]?[a-záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ]+)+$/;
 
-
 let firstName = document.getElementById("firstName");
 let lastName = document.getElementById("lastName");
 let address = document.getElementById("address");
@@ -162,67 +161,64 @@ let email = document.getElementById("email");
 firstName.addEventListener("change", (e) => {
 	let firstNameError = document.getElementById("firstNameErrorMsg");
 	if (e.target.value.match(regexName)) {
-		firstNameError.textContent = ""
-	} 
-	else {
-		firstNameError.textContent = "Veuillez corriger ce champs du formulaire";
+		firstNameError.textContent = "";
+	} else {
+		firstNameError.textContent =
+			"Veuillez corriger ce champs du formulaire";
 	}
-
 });
 lastName.addEventListener("change", (e) => {
 	let lastNameError = document.getElementById("lastNameErrorMsg");
 	if (e.target.value.match(regexName)) {
-		lastNameError.textContent = ""
-	}
-	else {
+		lastNameError.textContent = "";
+	} else {
 		lastNameError.textContent = "Veuillez corriger ce champs du formulaire";
 	}
-
 });
 address.addEventListener("change", (e) => {
 	let addressError = document.getElementById("addressErrorMsg");
 	if (e.target.value.match(regexAddress)) {
-		addressError.textContent = ""
-	}
-	else {
+		addressError.textContent = "";
+	} else {
 		addressError.textContent = "Veuillez corriger ce champs du formulaire";
 	}
-
 });
 city.addEventListener("change", (e) => {
 	let cityError = document.getElementById("cityErrorMsg");
 	if (e.target.value.match(regexName)) {
-		cityError.textContent = ""
-	}
-	else {
+		cityError.textContent = "";
+	} else {
 		cityError.textContent = "Veuillez corriger ce champs du formulaire";
 	}
-
 });
 email.addEventListener("change", (e) => {
 	let emailError = document.getElementById("emailErrorMsg");
 	if (e.target.value.match(regexEmail)) {
-		emailError.textContent = ""
-	}
-	else {
+		emailError.textContent = "";
+	} else {
 		emailError.textContent = "Veuillez corriger ce champs du formulaire";
 	}
-
 });
 
-function formIsValid () {
+function formIsValid() {
 	let emailValue = document.getElementById("email").value;
 	let cityValue = document.getElementById("city").value;
 	let addressValue = document.getElementById("address").value;
 	let firstNameValue = document.getElementById("firstName").value;
 	let lastNameValue = document.getElementById("lastName").value;
-	if (emailValue.match(regexEmail) && cityValue.match(regexName) && addressValue.match(regexAddress) && firstNameValue.match(regexName) && lastNameValue.match(regexName)) {
+	if (
+		emailValue.match(regexEmail) &&
+		cityValue.match(regexName) &&
+		addressValue.match(regexAddress) &&
+		firstNameValue.match(regexName) &&
+		lastNameValue.match(regexName)
+	) {
 		return 1;
 	}
 }
 
-function getAllOrderId () {
-	let allOrderId =[];
+function getAllOrderId() {
+	let allOrderId = [];
 	for (let item in localStorage) {
 		let cartItem = JSON.parse(localStorage.getItem(item));
 		if (cartItem != null) {
@@ -242,21 +238,20 @@ submitButton.addEventListener("click", async (e) => {
 				lastName: document.getElementById("lastName").value,
 				address: document.getElementById("address").value,
 				city: document.getElementById("city").value,
-				email: document.getElementById("email").value
-		},
-			products: getAllOrderId()
-	};
-	let orderRes = await fetch("http://localhost:3000/api/products/order", {
-		method: "POST",
-		body: JSON.stringify(order),
-		headers: {
-			'Accept': 'application/json',
-      		'Content-Type': 'application/json'
-		}
-	})
-	orderRes =  await orderRes.json();
-	localStorage.clear();
-	document.location.href = `confirmation.html?id=${orderRes.orderId}`
-}});
-
-
+				email: document.getElementById("email").value,
+			},
+			products: getAllOrderId(),
+		};
+		let orderRes = await fetch("http://localhost:3000/api/products/order", {
+			method: "POST",
+			body: JSON.stringify(order),
+			headers: {
+				Accept: "application/json",
+				"Content-Type": "application/json",
+			},
+		});
+		orderRes = await orderRes.json();
+		localStorage.clear();
+		document.location.href = `confirmation.html?id=${orderRes.orderId}`;
+	}
+});

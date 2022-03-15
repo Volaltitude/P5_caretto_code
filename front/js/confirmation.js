@@ -1,3 +1,7 @@
+/**
+ * Get the order Id from the URL
+ * @return { String } id
+ */
 function getIdFromUrl() {
 	const url = new URL(document.URL);
 	const paramsUrl = new URLSearchParams(url.search);

@@ -1,5 +1,10 @@
 const apiUrl = "http://localhost:3000/api/products";
 
+/**
+ * Get the params from an id item using fetch
+ * @param { String } id
+ * @return { Promise }
+ */
 async function getItemParams(id) {
 	try {
 		let listParams = await fetch(apiUrl + "/" + id);
@@ -9,10 +14,9 @@ async function getItemParams(id) {
 	}
 }
 
-function searchFromLocalStorage(idItem) {
-	return JSON.parse(localStorage.getItem(idItem));
-}
-
+/**
+ * Print the cart from the localStorage
+ */
 async function printCart() {
 	try {
 		for (let item in localStorage) {
@@ -89,9 +93,13 @@ async function printCart() {
 		return 1;
 	} catch (err) {
 		console.error(err);
+		return 0;
 	}
 }
 
+/**
+ * Print and calculate the total price and the total items
+ */
 async function printTotal() {
 	try {
 		let totalQuantity = 0;
@@ -114,6 +122,9 @@ async function printTotal() {
 }
 printTotal();
 
+/**
+ * Delete an item from the localStorage and from the page
+ */
 async function deleteItem() {
 	try {
 		if (await printCart()) {
@@ -132,6 +143,9 @@ async function deleteItem() {
 }
 deleteItem();
 
+/**
+ * Change the number of items in the Cart and update the localStorage
+ */
 setTimeout(function changeInput() {
 	let input = document.getElementsByClassName("itemQuantity");
 	for (let i = 0; i < input.length; i++) {
@@ -158,6 +172,11 @@ let lastName = document.getElementById("lastName");
 let address = document.getElementById("address");
 let city = document.getElementById("city");
 let email = document.getElementById("email");
+
+/**
+ * Check the validity of the input in the form
+ * @param { Object } e (event)
+ */
 firstName.addEventListener("change", (e) => {
 	let firstNameError = document.getElementById("firstNameErrorMsg");
 	if (e.target.value.match(regexName)) {
@@ -167,6 +186,10 @@ firstName.addEventListener("change", (e) => {
 			"Veuillez corriger ce champs du formulaire";
 	}
 });
+/**
+ * Check the validity of the input in the form
+ * @param { Object } e (event)
+ */
 lastName.addEventListener("change", (e) => {
 	let lastNameError = document.getElementById("lastNameErrorMsg");
 	if (e.target.value.match(regexName)) {
@@ -175,6 +198,10 @@ lastName.addEventListener("change", (e) => {
 		lastNameError.textContent = "Veuillez corriger ce champs du formulaire";
 	}
 });
+/**
+ * Check the validity of the input in the form
+ * @param { Object } e (event)
+ */
 address.addEventListener("change", (e) => {
 	let addressError = document.getElementById("addressErrorMsg");
 	if (e.target.value.match(regexAddress)) {
@@ -183,6 +210,10 @@ address.addEventListener("change", (e) => {
 		addressError.textContent = "Veuillez corriger ce champs du formulaire";
 	}
 });
+/**
+ * Check the validity of the input in the form
+ * @param { Object } e (event)
+ */
 city.addEventListener("change", (e) => {
 	let cityError = document.getElementById("cityErrorMsg");
 	if (e.target.value.match(regexName)) {
@@ -191,6 +222,10 @@ city.addEventListener("change", (e) => {
 		cityError.textContent = "Veuillez corriger ce champs du formulaire";
 	}
 });
+/**
+ * Check the validity of the input in the form
+ * @param { Object } e (event)
+ */
 email.addEventListener("change", (e) => {
 	let emailError = document.getElementById("emailErrorMsg");
 	if (e.target.value.match(regexEmail)) {
@@ -200,6 +235,10 @@ email.addEventListener("change", (e) => {
 	}
 });
 
+/**
+ * Check if all inputs in the form are valid
+ * @return { Boolean }
+ */
 function formIsValid() {
 	let emailValue = document.getElementById("email").value;
 	let cityValue = document.getElementById("city").value;
@@ -217,6 +256,10 @@ function formIsValid() {
 	}
 }
 
+/**
+ * Get all the ids from the localStorage
+ * @return { Array } allOrderId
+ */
 function getAllOrderId() {
 	let allOrderId = [];
 	for (let item in localStorage) {
@@ -229,29 +272,42 @@ function getAllOrderId() {
 }
 
 const submitButton = document.getElementById("order");
+
+/**
+ * Build an object from the informations in the form and the items' ids
+ * Submit this object to the API
+ * Redirect the user to the confirmation page with the order ID passed in the URL
+ */
 submitButton.addEventListener("click", async (e) => {
 	e.preventDefault();
-	if (formIsValid()) {
-		const order = {
-			contact: {
-				firstName: document.getElementById("firstName").value,
-				lastName: document.getElementById("lastName").value,
-				address: document.getElementById("address").value,
-				city: document.getElementById("city").value,
-				email: document.getElementById("email").value,
-			},
-			products: getAllOrderId(),
-		};
-		let orderRes = await fetch("http://localhost:3000/api/products/order", {
-			method: "POST",
-			body: JSON.stringify(order),
-			headers: {
-				Accept: "application/json",
-				"Content-Type": "application/json",
-			},
-		});
-		orderRes = await orderRes.json();
-		localStorage.clear();
-		document.location.href = `confirmation.html?id=${orderRes.orderId}`;
+	try {
+		if (formIsValid()) {
+			const order = {
+				contact: {
+					firstName: document.getElementById("firstName").value,
+					lastName: document.getElementById("lastName").value,
+					address: document.getElementById("address").value,
+					city: document.getElementById("city").value,
+					email: document.getElementById("email").value,
+				},
+				products: getAllOrderId(),
+			};
+			let orderRes = await fetch(
+				"http://localhost:3000/api/products/order",
+				{
+					method: "POST",
+					body: JSON.stringify(order),
+					headers: {
+						Accept: "application/json",
+						"Content-Type": "application/json",
+					},
+				}
+			);
+			orderRes = await orderRes.json();
+			localStorage.clear();
+			document.location.href = `confirmation.html?id=${orderRes.orderId}`;
+		}
+	} catch (err) {
+		console.error(err);
 	}
 });

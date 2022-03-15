@@ -1,5 +1,8 @@
 const apiUrl = "http://localhost:3000/api/products";
-
+/**
+ * Get the Id of the item from the current URL
+ * @return { string } id
+ */
 function getIdFromUrl() {
 	const url = new URL(document.URL);
 	const paramsUrl = new URLSearchParams(url.search);
@@ -7,6 +10,10 @@ function getIdFromUrl() {
 	return id;
 }
 
+/**
+ * Get all the paramaterers from the item using fetch
+ * @return { Promise }
+ */
 async function getItemParams() {
 	const id = getIdFromUrl();
 	try {
@@ -17,6 +24,9 @@ async function getItemParams() {
 	}
 }
 
+/**
+ * Print all the item's parameters on the current page
+ */
 async function printItemParams() {
 	try {
 		const listItemParams = await getItemParams();
@@ -51,6 +61,9 @@ printItemParams();
 const button = document.getElementById("addToCart");
 button.addEventListener("click", addToCart);
 
+/**
+ * Add the item to the cart and check the validity of the order
+ */
 function addToCart() {
 	const idItem = getIdFromUrl();
 	const colorItem = document.getElementById("colors").value;
@@ -71,6 +84,12 @@ function addToCart() {
 	}
 }
 
+/**
+ * Check if the item and its color add to the cart is already there
+ * @param { String } idItem
+ * @param { String } colorItem
+ * @return { Boolean }
+ */
 function checkOrder(idItem, colorItem) {
 	for (let id in localStorage) {
 		let storageItem = localStorage.getItem(id);
@@ -84,6 +103,12 @@ function checkOrder(idItem, colorItem) {
 	return true;
 }
 
+/**
+ * Check if the order is valid
+ * @param { String } colorItem
+ * @param { Integer } quantityItem
+ * @return { Boolean }
+ */
 function checkOrderValidity(colorItem, quantityItem) {
 	if (colorItem == "" && quantityItem == "0") {
 		alert("Veuillez choisir une couleur et une quantité valide");

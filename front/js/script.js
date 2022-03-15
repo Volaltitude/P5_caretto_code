@@ -1,6 +1,10 @@
 const idItems = document.getElementById("items");
 const apiUrl = "http://localhost:3000/api/products";
 
+/**
+ * Get the list of all items available from the API using fetch
+ * @return { Promise }
+ */
 async function getListItems() {
 	try {
 		let listItems = await fetch(apiUrl);
@@ -10,6 +14,9 @@ async function getListItems() {
 	}
 }
 
+/**
+ * Print all items on the current page
+ */
 async function printListItems() {
 	try {
 		const itemList = await getListItems();

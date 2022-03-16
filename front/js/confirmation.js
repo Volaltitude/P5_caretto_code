@@ -8,5 +8,7 @@ function getIdFromUrl() {
 	const id = paramsUrl.get("id");
 	return id;
 }
+
+//Print the order Id on the page
 let orderConfirm = document.getElementById("orderId");
 orderConfirm.textContent = getIdFromUrl();

@@ -90,10 +90,10 @@ async function printCart() {
 				deleteItem.textContent = "Supprimer";
 			}
 		}
-		return 1;
+		return true;
 	} catch (err) {
 		console.error(err);
-		return 0;
+		return false;
 	}
 }
 
@@ -252,7 +252,10 @@ function formIsValid() {
 		firstNameValue.match(regexName) &&
 		lastNameValue.match(regexName)
 	) {
-		return 1;
+		return true;
+	} else {
+		alert("Veuillez remplir correctement le formulaire");
+		return false;
 	}
 }
 

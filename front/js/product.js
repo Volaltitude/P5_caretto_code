@@ -1,7 +1,7 @@
 const apiUrl = "http://localhost:3000/api/products";
 /**
  * Get the Id of the item from the current URL
- * @return { string } id
+ * @return { String } id
  */
 function getIdFromUrl() {
 	const url = new URL(document.URL);
@@ -11,7 +11,7 @@ function getIdFromUrl() {
 }
 
 /**
- * Get all the paramaterers from the item using fetch
+ * Get all the paramaters from the item using fetch
  * @return { Promise }
  */
 async function getItemParams() {
@@ -71,10 +71,13 @@ function addToCart() {
 	if (!checkOrderValidity(colorItem, quantityItem)) {
 		return 0;
 	}
+	//If idItem and colorItem are both new, add the order to the localStorage
 	if (checkOrder(idItem, colorItem)) {
 		const order = [idItem, colorItem, quantityItem];
 		localStorage.setItem(idItem + colorItem, JSON.stringify(order));
 		console.log("add New");
+	//If idItem or colorItem already exist in localStorage, update the localStorage 
+	//with the new value
 	} else {
 		const storage = localStorage.getItem(idItem + colorItem);
 		const objectStorage = JSON.parse(storage);
@@ -85,7 +88,7 @@ function addToCart() {
 }
 
 /**
- * Check if the item and its color add to the cart is already there
+ * Check if the item and its color we want to add to the cart already exist
  * @param { String } idItem
  * @param { String } colorItem
  * @return { Boolean }
@@ -112,14 +115,14 @@ function checkOrder(idItem, colorItem) {
 function checkOrderValidity(colorItem, quantityItem) {
 	if (colorItem == "" && quantityItem == "0") {
 		alert("Veuillez choisir une couleur et une quantité valide");
-		return 0;
+		return false;
 	} else if (colorItem == "") {
 		alert("Veuillez choisir une couleur valide");
-		return 0;
+		return false;
 	} else if (quantityItem == "0") {
 		alert("Veuillez choisir une quantité valide");
-		return 0;
+		return false;
 	} else {
-		return 1;
+		return true;
 	}
 }
